@@ -76,6 +76,8 @@ class Object(object):
         self.last_modified = None
         self.metadata = {}
         self.manifest = None
+        self.content_encoding = None
+        self.content_disposition = None
         if object_record:
             self.name = object_record['name']
             self.content_type = object_record['content_type']
@@ -259,6 +261,12 @@ class Object(object):
         headers = self._make_headers()
 
         headers['X-Auth-Token'] = self.container.conn.token
+
+        if self.content_encoding:
+            headers['Content-Encoding'] = self.content_encoding
+
+        if self.content_disposition:
+            headers['Content-Disposition'] = self.content_disposition
 
         path = "/%s/%s/%s" % (self.container.conn.uri.rstrip('/'), \
                 quote(self.container.name), quote(self.name))
