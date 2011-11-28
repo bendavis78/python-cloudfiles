@@ -573,6 +573,10 @@ class Object(object):
                 self.manifest = hdr[1]
             if hdr[0].lower() == 'content-type':
                 self.content_type = hdr[1]
+            if hdr[0].lower() == 'content-disposition':
+                self.content_disposition = hdr[1]
+            if hdr[0].lower() == 'content-encoding':
+                self.content_encoding = hdr[1]
             if hdr[0].lower().startswith('x-object-meta-'):
                 self.metadata[hdr[0][14:]] = hdr[1]
             if hdr[0].lower() == 'etag':
@@ -611,6 +615,13 @@ class Object(object):
             headers['Content-Type'] = self.content_type
         else:
             headers['Content-Type'] = 'application/octet-stream'
+
+        if self.content_encoding:
+            headers['Content-Encoding'] = self.content_encoding
+
+        if self.content_disposition:
+            headers['Content-Disposition'] = self.content_disposition
+
         for key in self.metadata:
             if len(key) > consts.meta_name_limit:
                 raise(InvalidMetaName(key))
